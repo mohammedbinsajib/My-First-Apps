@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:test_app/Screen/home_screen.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:test_app/Screen/list_screen.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,14 +26,13 @@ class MyApp extends StatelessWidget {
           }
           if (snapshot.connectionState == ConnectionState.done) {
             return MaterialApp(
-              title: 'Flutter Demo',
-              theme: ThemeData(
-                // This is the theme of your application.
+                title: 'Flutter Demo',
+                theme: ThemeData(
+                  // This is the theme of your application.
 
-                primarySwatch: Colors.blue,
-              ),
-              home: HomeScreen(),
-            );
+                  primarySwatch: Colors.blue,
+                ),
+                home: ListScreen());
           }
           return CircularProgressIndicator();
         });

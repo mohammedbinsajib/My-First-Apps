@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:test_app/Screen/details_screen.dart';
 
 class ListScreen extends StatelessWidget {
   const ListScreen({Key? key}) : super(key: key);
@@ -7,9 +8,10 @@ class ListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('List Screen')),
       body: SafeArea(
           child: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('users').snapshots(),
+        stream: FirebaseFirestore.instance.collection('info').snapshots(),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
@@ -27,10 +29,41 @@ class ListScreen extends StatelessWidget {
                         snapshot.data!.docs.elementAt(index).get('name');
                     String position =
                         snapshot.data!.docs.elementAt(index).get('position');
+                    String phone =
+                        snapshot.data!.docs.elementAt(index).get('phone');
+                    String email =
+                        snapshot.data!.docs.elementAt(index).get('email');
 
-                    return ListTile(
-                      title: Text(name),
-                      subtitle: Text(position),
+                    return Container(
+                      child: Column(
+                        children: [
+                          Card(
+                            child: ListTile(
+                              title: Text(name),
+                              subtitle: Text(position),
+                              leading: Image.network(
+                                snapshot.data!.docs
+                                    .elementAt(index)
+                                    .get('image'),
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DetailsScreen(
+                                              name: name,
+                                              position: position,
+                                              phone: phone,
+                                              email: email,
+                                              image: snapshot.data!.docs
+                                                  .elementAt(index)
+                                                  .get('image'),
+                                            )));
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   },
                   separatorBuilder: (__, ___) {
@@ -39,7 +72,7 @@ class ListScreen extends StatelessWidget {
                   itemCount: snapshot.data!.docs.length);
             } else {
               return const Center(
-                child: Text('Documents aren`t available'),
+                child: Text('Documents  Unavailable'),
               );
             }
           } else {
@@ -49,6 +82,7 @@ class ListScreen extends StatelessWidget {
           }
         },
       )),
+      backgroundColor: Colors.indigo.shade900,
     );
   }
 }
